@@ -122,7 +122,7 @@
                 if (res.code == -1) {
                     return layer.msg('上传失败');
                 }
-                if (res.data=="" || res.data.substr(0,6)!="wxp://"){
+                if (res.data==""){
                     return layer.msg('请上传微信无金额收款二维码');
                 }
                 $('#wximg').attr('src', "enQrcode?url="+res.data);
@@ -148,7 +148,7 @@
                 if (res.code == -1) {
                     return layer.msg('上传失败');
                 }
-                if (res.data=="" || res.data.substr(0,22).toUpperCase()!="HTTPS://QR.ALIPAY.COM/"){
+                if (res.data=="" ){
                     return layer.msg('请上传支付宝无金额收款二维码');
                 }
                 $('#zfbimg').attr('src', "enQrcode?url="+res.data);

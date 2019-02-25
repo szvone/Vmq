@@ -117,7 +117,7 @@ public class WebController {
      * @return
      */
     @RequestMapping("/createOrder")
-    public String createOrder(String payId, String param, Integer type, Double price, String notifyUrl, String returnUrl, String sign, Integer isHtml) {
+    public String createOrder(String payId, String param, Integer type, String price, String notifyUrl, String returnUrl, String sign, Integer isHtml) {
         if (payId == null || payId.equals("")) {
             return new Gson().toJson(ResUtil.error("请传入商户订单号"));
         }
@@ -127,12 +127,23 @@ public class WebController {
         if (type != 1 && type != 2) {
             return new Gson().toJson(ResUtil.error("支付方式错误=>1|微信 2|支付宝"));
         }
-        if (price == null) {
+
+
+        Double priceD;
+        try {
+            priceD = Double.valueOf(price);
+        } catch (Exception e){
             return new Gson().toJson(ResUtil.error("请传入订单金额"));
         }
-        if (price < 0) {
+
+        if (priceD == null) {
+            return new Gson().toJson(ResUtil.error("请传入订单金额"));
+        }
+        if (priceD < 0) {
             return new Gson().toJson(ResUtil.error("订单金额必须大于0"));
         }
+
+
         if (sign == null || sign.equals("")) {
             return new Gson().toJson(ResUtil.error("请传入签名"));
         }
@@ -173,7 +184,7 @@ public class WebController {
     }
 
     @RequestMapping("/appPush")
-    public CommonRes appPush(Integer type, Double price, String t, String sign) {
+    public CommonRes appPush(Integer type, String price, String t, String sign) {
         return webService.appPush(type, price, t, sign);
     }
 

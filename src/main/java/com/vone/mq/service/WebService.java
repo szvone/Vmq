@@ -32,12 +32,15 @@ public class WebService {
     @Autowired
     private PayQrcodeDao payQrcodeDao;
 
-    public CommonRes createOrder(String payId, String param, Integer type, Double price, String notifyUrl, String returnUrl, String sign){
+    public CommonRes createOrder(String payId, String param, Integer type, String price, String notifyUrl, String returnUrl, String sign){
         String key = settingDao.findById("key").get().getVvalue();
         String jsSign =  md5(payId+param+type+price+key);
         if (!sign.equals(jsSign)){
             return ResUtil.error("签名校验不通过");
         }
+
+        Double priceD = Double.valueOf(price);
+
 
         Date currentTime = new Date();
 
@@ -47,7 +50,7 @@ public class WebService {
 
         int payQf = Integer.parseInt(settingDao.findById("payQf").get().getVvalue());
         //实际支付价格
-        double reallyPrice = price;
+        double reallyPrice = priceD;
 
         int row = 0;
         while (row == 0){
@@ -106,7 +109,7 @@ public class WebService {
         payOrder.setCloseDate(0);
         payOrder.setParam(param);
         payOrder.setType(type);
-        payOrder.setPrice(price);
+        payOrder.setPrice(priceD);
         payOrder.setReallyPrice(reallyPrice);
         payOrder.setNotifyUrl(notifyUrl);
         payOrder.setReturnUrl(returnUrl);
@@ -119,7 +122,7 @@ public class WebService {
 
 
         String timeOut = settingDao.findById("close").get().getVvalue();
-        CreateOrderRes createOrderRes = new CreateOrderRes(payId,orderId,type,price,reallyPrice,payUrl,isAuto,0,Integer.valueOf(timeOut),payOrder.getCreateDate());
+        CreateOrderRes createOrderRes = new CreateOrderRes(payId,orderId,type,priceD,reallyPrice,payUrl,isAuto,0,Integer.valueOf(timeOut),payOrder.getCreateDate());
 
         return ResUtil.success(createOrderRes);
     }
@@ -172,7 +175,7 @@ public class WebService {
         return ResUtil.success();
     }
 
-    public CommonRes appPush(Integer type,Double price,String t,String sign){
+    public CommonRes appPush(Integer type,String price,String t,String sign){
         String key = settingDao.findById("key").get().getVvalue();
         long cz = Long.valueOf(t)-new Date().getTime();
 
@@ -196,7 +199,7 @@ public class WebService {
             return ResUtil.error("重复推送");
         }
 
-        PayOrder payOrder = payOrderDao.findByReallyPriceAndStateAndType(price,0,type);
+        PayOrder payOrder = payOrderDao.findByReallyPriceAndStateAndType(Double.valueOf(price),0,type);
 
         if (payOrder==null){
 
@@ -208,8 +211,8 @@ public class WebService {
             payOrder.setCloseDate(new Date().getTime());
             payOrder.setParam("无订单转账");
             payOrder.setType(type);
-            payOrder.setPrice(price);
-            payOrder.setReallyPrice(price);
+            payOrder.setPrice(Double.valueOf(price));
+            payOrder.setReallyPrice(Double.valueOf(price));
             payOrder.setState(1);
             payOrder.setPayUrl("无订单转账");
             payOrderDao.save(payOrder);
