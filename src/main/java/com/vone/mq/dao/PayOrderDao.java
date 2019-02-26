@@ -52,4 +52,15 @@ public interface PayOrderDao  extends JpaRepository<PayOrder,Long>, JpaSpecifica
 
     @Query(value = "select sum(price) from pay_order where state = ?1", nativeQuery = true)
     double getCountMoney(int state);
+
+
+    @Transactional
+    int deleteByState(int state);
+
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from pay_order where create_date<?1", nativeQuery = true)
+    int deleteByAfterCreateDate(String date);
+
 }

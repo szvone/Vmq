@@ -30,12 +30,20 @@
 </div>
 </div>
 
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delGq">删除所有过期订单</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delLast">删除七天前订单</button>
 
+    </div>
+</script>
 <table id="demo" lay-filter="test"></table>
 
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="bd">补单</a>
     <a class="layui-btn layui-btn-xs" lay-event="info">详情</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+
 </script>
 
 
@@ -63,6 +71,7 @@
             elem: '#demo'
             ,height: 'full-160'
             ,url: '/admin/getOrders'
+            ,toolbar: '#toolbarDemo'
             ,where: {
                 state:$("#state").val(),
                 type:$("#type").val()
@@ -150,6 +159,32 @@
 
                     console.log(data.id);
                 });
+            }else if(layEvent === 'del'){
+                layer.confirm('确定要删除订单吗？', function(index){
+                    layer.msg('操作中', {
+                        icon: 16
+                        ,shade: 0.01
+                    });
+
+                    $.post("/admin/delOrder","id="+data.id,function (data) {
+                        if (data.code==1){
+                            layer.msg("操作成功！");
+                            myTable.reload({
+                                where: {
+                                    state:$("#state").val(),
+                                    type:$("#type").val()
+                                }
+                            });
+                        }else{
+                            layer.msg(data.msg);
+                        }
+
+
+
+                    });
+
+                    console.log(data.id);
+                });
             }
         });
         form.on('select(state)', function(data){
@@ -171,6 +206,64 @@
             });
 
         });
+
+
+        //头工具栏事件
+        table.on('toolbar(test)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'delGq':
+                    layer.confirm('确定要删除所有过期订单吗？', function(index){
+                        layer.msg('操作中', {
+                            icon: 16
+                            ,shade: 0.01
+                        });
+
+                        $.post("/admin/delGqOrder",function (data) {
+                            if (data.code==1){
+                                layer.msg("操作成功！");
+                                myTable.reload({
+                                    where: {
+                                        state:$("#state").val(),
+                                        type:$("#type").val()
+                                    }
+                                });
+                            }else{
+                                layer.msg(data.msg);
+                            }
+
+                        });
+
+                    });
+
+                    break;
+                case 'delLast':
+                    layer.confirm('确定要删除七天前的所有订单吗？', function(index){
+                        layer.msg('操作中', {
+                            icon: 16
+                            ,shade: 0.01
+                        });
+
+                        $.post("/admin/delLastOrder",function (data) {
+                            if (data.code==1){
+                                layer.msg("操作成功！");
+                                myTable.reload({
+                                    where: {
+                                        state:$("#state").val(),
+                                        type:$("#type").val()
+                                    }
+                                });
+                            }else{
+                                layer.msg(data.msg);
+                            }
+
+                        });
+
+                    });
+                    break;
+            };
+        });
+
 
         form.render();
 

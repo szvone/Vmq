@@ -172,4 +172,29 @@ public class AdminController {
         return adminService.getMain();
     }
 
+    @RequestMapping("/admin/delOrder")
+    public CommonRes delOrder(HttpSession session,Long id){
+        if (session.getAttribute("login")==null){
+            return ResUtil.error("未登录");
+        }
+
+        return adminService.delOrder(id);
+    }
+
+    @RequestMapping("/admin/delGqOrder")
+    public CommonRes delGqOrder(HttpSession session){
+        if (session.getAttribute("login")==null){
+            return ResUtil.error("未登录");
+        }
+
+        return adminService.delGqOrder();
+    }
+    @RequestMapping("/admin/delLastOrder")
+    public CommonRes delLastOrder(HttpSession session){
+        if (session.getAttribute("login")==null){
+            return ResUtil.error("未登录");
+        }
+
+        return adminService.delLastOrder();
+    }
 }

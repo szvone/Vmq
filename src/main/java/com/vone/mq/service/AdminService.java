@@ -192,13 +192,29 @@ public class AdminService {
         todaySuccessOrder += todaySuccessOrder2;
 
         int todayCloseOrder =  payOrderDao.getTodayCount(startDate,endDate,-1);//当日失败订单
-        double todayMoney = payOrderDao.getTodayCountMoney(startDate,endDate,1);
-        double todayMoney2 = payOrderDao.getTodayCountMoney(startDate,endDate,2);
+
+        double todayMoney;
+        double todayMoney2;
+        try {
+            todayMoney = payOrderDao.getTodayCountMoney(startDate,endDate,1);
+            todayMoney2 = payOrderDao.getTodayCountMoney(startDate,endDate,2);
+        }catch (Exception e){
+            todayMoney = 0;
+            todayMoney2 = 0;
+        }
+
         todayMoney = Arith.add(todayMoney,todayMoney2);
 
         int countOrder = payOrderDao.getCount(1);
-        double countMoney = payOrderDao.getCountMoney(1);
-        double countMoney2 = payOrderDao.getCountMoney(2);
+        double countMoney;
+        double countMoney2;
+        try {
+            countMoney = payOrderDao.getCountMoney(1);
+            countMoney2 = payOrderDao.getCountMoney(2);
+        }catch (Exception e){
+            countMoney = 0;
+            countMoney2 = 0;
+        }
         countMoney = Arith.add(countMoney,countMoney2);
 
 
@@ -238,6 +254,21 @@ public class AdminService {
         payQrcodeDao.deleteById(id);
         return ResUtil.success();
     }
+    public CommonRes delOrder(Long id){
+        payOrderDao.deleteById(id);
+        return ResUtil.success();
+    }
+    public CommonRes delGqOrder(){
+        payOrderDao.deleteByState(-1);
+        return ResUtil.success();
+    }
+
+    public CommonRes delLastOrder(){
+        payOrderDao.deleteByAfterCreateDate(String.valueOf(new Date().getTime()-7*86400*1000));
+        return ResUtil.success();
+    }
+
+
     public static String md5(String text) {
         //加密后的字符串
         String encodeStr= DigestUtils.md5DigestAsHex(text.getBytes());
