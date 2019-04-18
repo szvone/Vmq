@@ -7,7 +7,7 @@ V免签 是基于SpringBoot 2.1.1 实现的一套免签支付程序，主要包�
  + 使用H2-Database，仅需安装Java环境，简单配置，一键搭建
  + 超简单Api使用，提供统一Api实现收款回调
  + 免费、开源
- + 如果您不熟悉Java的配置，您可以使用PHP版本的服务端（https://github.com/szvone/Vmqphp）
+ + 如果您不熟悉Java的配置，您可以使用PHP版本的服务端（ https://github.com/szvone/Vmqphp ）
  
 > V免签开发交流群：992029073
 
