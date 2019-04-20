@@ -62,6 +62,7 @@ public class WebService {
 
             if (row == 0){
                 if (payQf==1){
+
                     reallyPrice = Arith.add(reallyPrice,0.01);
                 }else{
                     reallyPrice = Arith.sub(reallyPrice,0.01);

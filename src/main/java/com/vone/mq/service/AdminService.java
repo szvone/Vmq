@@ -53,7 +53,7 @@ public class AdminService {
 
         return ResUtil.success();
     }
-    public CommonRes saveSetting(String user,String pass,String notifyUrl,String returnUrl,String key,String wxpay,String zfbpay,String close){
+    public CommonRes saveSetting(String user,String pass,String notifyUrl,String returnUrl,String key,String wxpay,String zfbpay,String close,String payQf){
         Setting s = new Setting();
         s.setVkey("user");
         s.setVvalue(user);
@@ -80,6 +80,10 @@ public class AdminService {
         settingDao.save(s);
         s.setVkey("zfbpay");
         s.setVvalue(zfbpay);
+        settingDao.save(s);
+
+        s.setVkey("payQf");
+        s.setVvalue(payQf);
         settingDao.save(s);
 
         s.setVkey("close");
@@ -197,9 +201,12 @@ public class AdminService {
         double todayMoney2;
         try {
             todayMoney = payOrderDao.getTodayCountMoney(startDate,endDate,1);
-            todayMoney2 = payOrderDao.getTodayCountMoney(startDate,endDate,2);
         }catch (Exception e){
             todayMoney = 0;
+        }
+        try {
+            todayMoney2 = payOrderDao.getTodayCountMoney(startDate,endDate,2);
+        }catch (Exception e){
             todayMoney2 = 0;
         }
 
@@ -210,9 +217,12 @@ public class AdminService {
         double countMoney2;
         try {
             countMoney = payOrderDao.getCountMoney(1);
-            countMoney2 = payOrderDao.getCountMoney(2);
         }catch (Exception e){
             countMoney = 0;
+        }
+        try {
+            countMoney2 = payOrderDao.getCountMoney(2);
+        }catch (Exception e){
             countMoney2 = 0;
         }
         countMoney = Arith.add(countMoney,countMoney2);

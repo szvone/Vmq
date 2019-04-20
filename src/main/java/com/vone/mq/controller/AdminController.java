@@ -106,11 +106,11 @@ public class AdminController {
         return menu;
     }
     @RequestMapping("/admin/saveSetting")
-    public CommonRes saveSetting(HttpSession session,String user,String pass,String notifyUrl,String returnUrl,String key,String wxpay,String zfbpay,String close){
+    public CommonRes saveSetting(HttpSession session,String user,String pass,String notifyUrl,String returnUrl,String key,String wxpay,String zfbpay,String close,String payQf){
         if (session.getAttribute("login")==null){
             return ResUtil.error("未登录");
         }
-        return adminService.saveSetting(user, pass, notifyUrl, returnUrl, key, wxpay, zfbpay, close);
+        return adminService.saveSetting(user, pass, notifyUrl, returnUrl, key, wxpay, zfbpay, close, payQf);
     }
     @RequestMapping("/admin/getSettings")
     public CommonRes getSettings(HttpSession session){

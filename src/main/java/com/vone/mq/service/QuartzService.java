@@ -22,7 +22,7 @@ public class QuartzService {
     private TmpPriceDao tmpPriceDao;
 
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 30000)
     public void timerToZZP(){
 
         try {
