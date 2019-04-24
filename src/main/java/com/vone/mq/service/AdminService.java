@@ -265,6 +265,10 @@ public class AdminService {
         return ResUtil.success();
     }
     public CommonRes delOrder(Long id){
+        PayOrder payOrder = payOrderDao.findById(id).get();
+        if (payOrder.getState()==0){
+            tmpPriceDao.delprice(payOrder.getType()+"-"+payOrder.getReallyPrice());
+        }
         payOrderDao.deleteById(id);
         return ResUtil.success();
     }
