@@ -248,7 +248,11 @@
             if (data.code == 1){
                 window.location.href = data.data;
             } else{
-                setTimeout("check()",500);
+                if (data.data == "订单已过期") {
+                    intDiff = 0;
+                }else{
+                    setTimeout("check()",1500);
+                }
             }
         })
     }
